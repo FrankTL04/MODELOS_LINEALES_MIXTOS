@@ -1,0 +1,99 @@
+---
+title: "MODELOS LINEALES MIXTOS"
+author: "FRANK TOMAPASCA"
+format: html
+---
+
+
+
+# LIBRERIAS
+```{r}
+library(tidyverse)
+library(googlesheets4)
+library(lme4)
+library(emmeans)
+```
+
+
+
+
+```{r}
+library(googlesheets4)
+library(tidyverse)
+
+url <- "https://docs.google.com/spreadsheets/d/15r7ZwcZZHbEgltlF6gSFvCTFA-CFzVBWwg3mFlRyKPs/edit?gid=172957346#gid=172957346"
+
+gs <- url %>%
+  as_sheets_id()
+
+fb <- gs %>%
+  range_read(sheet = "fb")
+
+view(fb)
+```
+
+```{r}
+fb <- gs %>%
+  range_read(sheet = "fb") %>%
+  mutate(across(1:4, as.factor))  # Ejemplo: convierte columnas 1 a 4 en factores
+
+str(fb)
+
+```
+```{r}
+library(lme4)
+```
+
+
+
+# MODELO
+
+$$ wue_(tuber) = \mu + bloque + riego +geno + riego*geno + e $$
+
+
+# ANALISIS DE VARIANCIA
+
+```{r}
+md <- lmer(twue ~ 0 + riego * geno + (1 | bloque), data = fb)
+
+
+anova(md)  # SIN SIGNIFICANCIA
+
+library(car)
+
+Anova(md)    # CON SIGNIFICANCIA
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
