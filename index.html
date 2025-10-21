@@ -302,6 +302,212 @@ riego:geno  23.706 14     0.0497 *
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: mvtnorm</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: survival</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: TH.data</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Cargando paquete requerido: MASS</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    select</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Adjuntando el paquete: 'TH.data'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:MASS':
+
+    geyser</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Medias ajustadas para la interacción riego:geno</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md, <span class="sc">~</span> riego<span class="sc">:</span>geno)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de medias con ajuste de Tukey</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>comp <span class="ot">&lt;-</span> <span class="fu">pairs</span>(emm, <span class="at">adjust =</span> <span class="st">"tukey"</span>)</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Generación de letras de significancia</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>letras <span class="ot">&lt;-</span> multcomp<span class="sc">::</span><span class="fu">cld</span>(emm,</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>                        <span class="at">adjust =</span> <span class="st">"tukey"</span>,   <span class="co"># método de ajuste</span></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">Letters =</span> letters,  <span class="co"># función para asignar letras</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>                        <span class="at">alpha =</span> <span class="fl">0.05</span>,       <span class="co"># nivel de significancia</span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">reversed =</span> <span class="cn">TRUE</span>)    <span class="co"># opcional, orden de letras</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Note: adjust = "tukey" was changed to "sidak"
+because "tukey" is only appropriate for one set of pairwise comparisons</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar las letras de significancia</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>letras</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> riego    geno emmean    SE   df lower.CL upper.CL .group           
+ sequia   G11    8.59 0.409 58.3    7.241     9.93  a               
+ sequia   G03    7.64 0.409 58.3    6.297     8.99  ab              
+ irrigado G15    7.47 0.409 58.3    6.124     8.82  abc             
+ irrigado G11    7.32 0.409 58.3    5.971     8.66  abcd            
+ sequia   G07    7.12 0.409 58.3    5.779     8.47  abcde           
+ sequia   G15    7.10 0.409 58.3    5.750     8.44  abcde           
+ irrigado G03    6.73 0.409 58.3    5.388     8.08  abcdef          
+ sequia   G10    6.61 0.409 58.3    5.267     7.96  abcdefg         
+ irrigado G07    6.53 0.409 58.3    5.185     7.88   bcdefgh        
+ irrigado G09    6.13 0.409 58.3    4.788     7.48   bcdefghi       
+ sequia   G09    5.78 0.409 58.3    4.431     7.12   bcdefghij      
+ irrigado G04    5.52 0.409 58.3    4.174     6.87    cdefghijk     
+ sequia   G04    5.42 0.409 58.3    4.073     6.77     defghijk     
+ irrigado G05    5.35 0.409 58.3    4.004     6.70     defghijkl    
+ sequia   G05    5.27 0.409 58.3    3.929     6.62      efghijklm   
+ irrigado G10    5.07 0.409 58.3    3.727     6.42       fghijklm   
+ sequia   G14    4.63 0.409 58.3    3.284     5.98        ghijklmn  
+ sequia   G01    4.61 0.409 58.3    3.265     5.96         hijklmn  
+ irrigado G12    4.57 0.409 58.3    3.226     5.92         hijklmn  
+ irrigado G01    4.31 0.409 58.3    2.968     5.66          ijklmn  
+ sequia   G02    4.28 0.409 58.3    2.930     5.62          ijklmn  
+ irrigado G02    4.01 0.409 58.3    2.664     5.36           jklmno 
+ sequia   G12    3.98 0.409 58.3    2.630     5.32           jklmno 
+ irrigado G14    3.96 0.409 58.3    2.610     5.30           jklmno 
+ irrigado G08    3.77 0.409 58.3    2.428     5.12            klmno 
+ sequia   G13    3.42 0.409 58.3    2.070     4.76             lmnop
+ sequia   G08    3.31 0.409 58.3    1.960     4.65              mnop
+ irrigado G13    2.91 0.409 58.3    1.566     4.26               nop
+ irrigado G06    2.11 0.409 58.3    0.760     3.45                op
+ sequia   G06    1.52 0.409 58.3    0.171     2.86                 p
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+Conf-level adjustment: sidak method for 30 estimates 
+P value adjustment: tukey method for comparing a family of 30 estimates 
+significance level used: alpha = 0.05 
+NOTE: If two or more means share the same grouping symbol,
+      then we cannot show them to be different.
+      But we also did not show them to be the same. </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcompView)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelo mixto</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>md <span class="ot">&lt;-</span> <span class="fu">lmer</span>(twue <span class="sc">~</span> <span class="dv">0</span> <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>bloque) <span class="sc">+</span> riego<span class="sc">*</span>geno, <span class="at">data =</span> fb)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="co"># ANOVA tipo II o III según interés</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="fu">Anova</span>(md, <span class="at">type =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Deviance Table (Type III Wald chisquare tests)
+
+Response: twue
+             Chisq Df Pr(&gt;Chisq)    
+riego      199.999  2     &lt;2e-16 ***
+geno       261.502 14     &lt;2e-16 ***
+riego:geno  23.706 14     0.0497 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Medias ajustadas para la interacción riego:geno</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>emm <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(md, <span class="sc">~</span> riego<span class="sc">:</span>geno)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Comparación de medias con ajuste de Tukey</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>comp <span class="ot">&lt;-</span> <span class="fu">pairs</span>(emm, <span class="at">adjust =</span> <span class="st">"tukey"</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Generación de letras de significancia</span></span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>letras <span class="ot">&lt;-</span> multcomp<span class="sc">::</span><span class="fu">cld</span>(emm, <span class="at">adjust =</span> <span class="st">"tukey"</span>, <span class="at">Letters =</span> letters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Note: adjust = "tukey" was changed to "sidak"
+because "tukey" is only appropriate for one set of pairwise comparisons</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>letras</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> riego    geno emmean    SE   df lower.CL upper.CL .group           
+ sequia   G06    1.52 0.409 58.3    0.171     2.86  a               
+ irrigado G06    2.11 0.409 58.3    0.760     3.45  ab              
+ irrigado G13    2.91 0.409 58.3    1.566     4.26  abc             
+ sequia   G08    3.31 0.409 58.3    1.960     4.65  abcd            
+ sequia   G13    3.42 0.409 58.3    2.070     4.76  abcde           
+ irrigado G08    3.77 0.409 58.3    2.428     5.12   bcdef          
+ irrigado G14    3.96 0.409 58.3    2.610     5.30   bcdefg         
+ sequia   G12    3.98 0.409 58.3    2.630     5.32   bcdefg         
+ irrigado G02    4.01 0.409 58.3    2.664     5.36   bcdefg         
+ sequia   G02    4.28 0.409 58.3    2.930     5.62    cdefgh        
+ irrigado G01    4.31 0.409 58.3    2.968     5.66    cdefgh        
+ irrigado G12    4.57 0.409 58.3    3.226     5.92    cdefghi       
+ sequia   G01    4.61 0.409 58.3    3.265     5.96    cdefghi       
+ sequia   G14    4.63 0.409 58.3    3.284     5.98    cdefghij      
+ irrigado G10    5.07 0.409 58.3    3.727     6.42     defghijk     
+ sequia   G05    5.27 0.409 58.3    3.929     6.62     defghijkl    
+ irrigado G05    5.35 0.409 58.3    4.004     6.70      efghijklm   
+ sequia   G04    5.42 0.409 58.3    4.073     6.77       fghijklm   
+ irrigado G04    5.52 0.409 58.3    4.174     6.87       fghijklmn  
+ sequia   G09    5.78 0.409 58.3    4.431     7.12        ghijklmno 
+ irrigado G09    6.13 0.409 58.3    4.788     7.48         hijklmno 
+ irrigado G07    6.53 0.409 58.3    5.185     7.88          ijklmno 
+ sequia   G10    6.61 0.409 58.3    5.267     7.96           jklmnop
+ irrigado G03    6.73 0.409 58.3    5.388     8.08            klmnop
+ sequia   G15    7.10 0.409 58.3    5.750     8.44             lmnop
+ sequia   G07    7.12 0.409 58.3    5.779     8.47             lmnop
+ irrigado G11    7.32 0.409 58.3    5.971     8.66              mnop
+ irrigado G15    7.47 0.409 58.3    6.124     8.82               nop
+ sequia   G03    7.64 0.409 58.3    6.297     8.99                op
+ sequia   G11    8.59 0.409 58.3    7.241     9.93                 p
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 
+Conf-level adjustment: sidak method for 30 estimates 
+P value adjustment: tukey method for comparing a family of 30 estimates 
+significance level used: alpha = 0.05 
+NOTE: If two or more means share the same grouping symbol,
+      then we cannot show them to be different.
+      But we also did not show them to be the same. </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Limpieza del data frame con letras</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>letras_df <span class="ot">&lt;-</span> letras <span class="sc">%&gt;%</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">riego =</span> <span class="fu">factor</span>(riego, <span class="at">levels =</span> <span class="fu">unique</span>(fb<span class="sc">$</span>riego)),</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">geno =</span> <span class="fu">factor</span>(geno, <span class="at">levels =</span> <span class="fu">unique</span>(fb<span class="sc">$</span>geno)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(letras_df, <span class="fu">aes</span>(<span class="at">x =</span> geno, <span class="at">y =</span> emmean, <span class="at">fill =</span> riego)) <span class="sc">+</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> emmean <span class="sc">-</span> SE, <span class="at">ymax =</span> emmean <span class="sc">+</span> SE),</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> .group, <span class="at">y =</span> emmean <span class="sc">+</span> SE <span class="sc">+</span> <span class="fl">0.05</span>),</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.8</span>),</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">3</span>, <span class="at">vjust =</span> <span class="dv">0</span>, <span class="at">angle =</span> <span class="dv">90</span>) <span class="sc">+</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Genotipos"</span>, <span class="at">y =</span> <span class="st">"TWUE (eficiencia del uso del agua total)"</span>,</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Riego"</span>) <span class="sc">+</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 
 </main>
